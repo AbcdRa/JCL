@@ -9,6 +9,5 @@
         <Command string = "!!!!" class="ExtStart"/>
         <Command string = "!!" class="ScrStart"/>
         <Command string = "!!!" class="RdrStart"/>
-        <Command string = "who" class="Who"/>
     </Commands>
 </root>
