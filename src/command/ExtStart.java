@@ -29,7 +29,8 @@ public class ExtStart implements Command {
             OutputStream out1 = client.getSocket().getOutputStream();
             InputStream in2 = process.getInputStream();
             OutputStream out2 = process.getOutputStream();
-            new CrossStream(in1, out1,in2, out2).start();
+            InputStream err = process.getErrorStream();
+            new CrossStream(in1, out1,in2, out2, err).start();
             process.waitFor();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -43,6 +44,7 @@ public class ExtStart implements Command {
         return rawCmd;
     }
 
+
     private String getPath(PSConnector console) {
         console.send("$p = pwd | select-Object Path");
         console.getOut(">");
@@ -54,20 +56,23 @@ public class ExtStart implements Command {
         return path;
     }
 
-    public void joinArgWithCmd() {
-        rawCmd = baseCmd + " ";
+    public String joinArgWithCmd() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(baseCmd);
+        sb.append(" ");
         for (String arg : args) {
-            rawCmd += arg + " ";
+            sb.append(arg);
+            sb.append(" ");
         }
+        rawCmd = sb.toString();
+        return rawCmd;
     }
 
-    @Override
-    public void and(Command command) {
+    public void and(ClientThread client, Command command) {
         //Процессы нельзя связать с другими коммандами
     }
 
-    @Override
-    public void or(Command command) {
+    public void or(ClientThread client, Command command) {
         //Процессы нельзя связать с другими коммандами
     }
 

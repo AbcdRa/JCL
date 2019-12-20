@@ -3,7 +3,7 @@ package command;
 import basic.PSConnector;
 import net.ClientThread;
 
-public class Cd implements Command {
+public class Cd extends AbstractCommand {
     private final String baseCmd = "cd";
     private String rawCmd = "cd";
     private String arg;
@@ -35,14 +35,11 @@ public class Cd implements Command {
     }
 
     @Override
-    public void and(Command command) {
-
+    public String joinArgWithCmd() {
+        return baseCmd + " " + arg;
     }
 
-    @Override
-    public void or(Command command) {
 
-    }
 
 
 }

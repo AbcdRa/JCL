@@ -3,12 +3,20 @@ package command;
 import basic.PSConnector;
 import net.ClientThread;
 
-public class Dir implements Command {
-    private final String baseCmd = "dir";
-    private boolean backMode = false;
-    private String rawCmd = "dir";
+public class Dir extends AbstractCommand{
+    public Dir() {
+        rawCmd = "dir";
+        baseCmd = "dir";
+    }
+
+
     @Override
     public void addArg(String arg) { }
+
+    @Override
+    public String joinArgWithCmd() {
+        return baseCmd;
+    }
 
     @Override
     public void exec(PSConnector console, ClientThread client) {
@@ -20,23 +28,4 @@ public class Dir implements Command {
         client.send(console.getOut(">"));
     }
 
-    @Override
-    public String getRawCmd() {
-        return rawCmd;
-    }
-
-    @Override
-    public void and(Command command) {
-
-    }
-
-    @Override
-    public void or(Command command) {
-
-    }
-
-    @Override
-    public void setBackMode(boolean backMode) {
-        this.backMode = backMode;
-    }
 }

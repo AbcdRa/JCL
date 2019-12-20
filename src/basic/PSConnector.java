@@ -58,7 +58,13 @@ public class PSConnector {
 
     /**Буфферизировать и ждать вывод до стоп строки**/
     public String getOut(String stopStr) {
-        return StaticFunc.cutStringTo(in, stopStr);
+        String result = StaticFunc.cutStringTo(in, stopStr);
+        try {
+            result += "" + new String(cmdProcess.getErrorStream().readNBytes(cmdProcess.getErrorStream().available()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 }

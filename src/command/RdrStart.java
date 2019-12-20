@@ -9,11 +9,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-public class RdrStart implements Command {
+public class RdrStart extends AbstractCommand {
     private ArrayList<String> args = new ArrayList<>();
-    private String baseCmd = "";
-    private String rawCmd = "";
-    private Boolean backMode = false;
+
+    public RdrStart() {
+        baseCmd = "";
+        rawCmd = "";
+    }
 
     @Override
     public void addArg(String arg) {
@@ -34,9 +36,14 @@ public class RdrStart implements Command {
             OutputStream out1 = client.getSocket().getOutputStream();
             InputStream in2 = console.getCmdProcess().getInputStream();
             OutputStream out2 = console.getCmdProcess().getOutputStream();
-            CrossStream cS = new CrossStream(in1, out1, in2, out2);
+            InputStream err = console.getCmdProcess().getErrorStream();
+            CrossStream cS = new CrossStream(in1, out1, in2, out2, err);
             cS.start();
-            while (!cS.isInterrupt());
+            try {
+                cS.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,25 +65,17 @@ public class RdrStart implements Command {
         return path;
     }
 
-    public void joinArgWithCmd() {
-        rawCmd = baseCmd + " ";
+    public String joinArgWithCmd() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(baseCmd);
+        sb.append(" ");
         for (String arg : args) {
-            rawCmd += arg + " ";
+            sb.append(arg);
+            sb.append(" ");
         }
+        rawCmd = sb.toString();
+        return rawCmd;
     }
 
-    @Override
-    public void and(Command command) {
 
-    }
-
-    @Override
-    public void or(Command command) {
-
-    }
-
-    @Override
-    public void setBackMode(boolean backMode) {
-        this.backMode = backMode;
-    }
 }

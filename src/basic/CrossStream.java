@@ -9,6 +9,7 @@ public class CrossStream extends Thread{
     private OutputStream out1;
     private InputStream in2;
     private OutputStream out2;
+    private InputStream err;
 
     public boolean isInterrupt() {
         return isInterrupt;
@@ -16,11 +17,12 @@ public class CrossStream extends Thread{
 
     private boolean isInterrupt = false;
 
-    public CrossStream(InputStream in1, OutputStream out1, InputStream in2,  OutputStream out2) {
+    public CrossStream(InputStream in1, OutputStream out1, InputStream in2,  OutputStream out2, InputStream err) {
         this.in1 = in1;
         this.in2 = in2;
         this.out1 = out1;
         this.out2 = out2;
+        this.err = err;
     }
 
     @Override
@@ -28,6 +30,7 @@ public class CrossStream extends Thread{
         Runnable redirect1 = () -> {while(true) {
                 try {
                     out1.write(in2.readNBytes(in2.available()));
+                    out1.write(err.readNBytes(err.available()));
                     out1.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -52,7 +55,6 @@ public class CrossStream extends Thread{
                     break;
                 }
             }
-            isInterrupt = true;
 
         };
         Thread th1 = new Thread(redirect1);
@@ -61,6 +63,10 @@ public class CrossStream extends Thread{
         th2.start();
         try{
             th2.join();
+            System.out.println("Был введен interrupt");
+            isInterrupt = true;
+            th1.interrupt();
+            isInterrupt = true;
         }
         catch (InterruptedException e) {
             e.printStackTrace();

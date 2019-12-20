@@ -19,7 +19,7 @@ public class Parser {
         return dict;
     }
 
-    public Parser()
+    Parser()
     {
         //Получаем документ
         document = getDocument();
@@ -53,14 +53,17 @@ public class Parser {
         Document document = null;
         {
             try {
-                document = builder.parse(new File(FILE_PATH));
+                File file = new File(FILE_PATH);
+                document = builder.parse(file);
+                if(document == null) throw new NullPointerException();
             } catch (SAXException e) {
                 System.out.println("ERR Parser_getDocument SAXException");
                 e.printStackTrace();
-            } catch (IOException e) {
+            } catch (IOException | NullPointerException e) {
                 System.out.println("ERR Parser_getDocument: Не найден конфигурационный файл jcl.xml");
                 e.printStackTrace();
             }
+
         }
         return document;
     }
@@ -88,19 +91,19 @@ public class Parser {
      * @param cmdOp Имя команды
      * @return Класс обрабатывающий эту команду
      */
-    public Class getClass(String cmdOp) {
+    Class getClass(String cmdOp) {
         cmdOp = cmdOp.strip();
-        String className = "command." + getClassName(cmdOp);
+        String className = getClassName(cmdOp);
         if(className == null) {
             System.out.println("Не удалось распознать класс соответствующей комманде" + cmdOp);
             return null;
         }
         else {
+            className += "command." + className;
             try {
                 return Class.forName(className);
             } catch (ClassNotFoundException e) {
                 System.out.println("Не удалось найти класс " +className+ " по имени");
-                e.printStackTrace();
             }
             return null;
         }
@@ -110,9 +113,9 @@ public class Parser {
      * @param str проверяемая строка
      * @return true : Если это имя команды, false : Не является именем команды
      */
-    public boolean isCmdName (String str) {
+     boolean isCmdName (String str) {
         if(getClass(str) == null) return false;
-        else return true;
+        return true;
     }
 }
 

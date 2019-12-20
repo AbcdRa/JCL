@@ -63,6 +63,7 @@ public class ClientThread extends Thread{
         }
         recievier = new Recievier(this);
         recievier.run();
+        ConnectionsProcessor.getUsers().remove(this);
     }
 
     public void send(String string) {

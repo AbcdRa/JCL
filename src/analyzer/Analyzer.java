@@ -16,6 +16,8 @@ public class Analyzer {
             if(command == null) return false;
             command.exec(client.getPSConnector(), client);
             return true;
+        } else {
+            processCmds(line, client);
         }
         return false;
     }
@@ -48,7 +50,47 @@ public class Analyzer {
         return command;
     }
 
+    private static Command processCmds(String line, ClientThread client) {
+        String[] cmdParts = line.split(" ");
+        String line1 = "";
+        String line2 = "";
+        int i;
+        for(i = 0; !cmdParts[i].equals("&&") && !cmdParts[i].equals("||"); i++) {
+            line1 += cmdParts[i] + " ";
+        }
+        String op = cmdParts[i];
+        for(i=i+1; i < cmdParts.length - 1; i++) {
+            line2 += cmdParts[i] + " ";
+        }
+        Command c1 = processCmd(line1, client);
+        String lastArg = cmdParts[cmdParts.length - 1];
+        if(lastArg.equals("&")) {
+            if(c1 != null) c1.setBackMode(true);
+        } else {
+            line2 += lastArg;
+        }
+        if(c1 == null) {
+            client.send("Не удалось распознать " + line1 + " как команду");
+            if(op.equals("||")) {
+                return processCmd(line2, client);
+            }
+        }
+        Command c2 = processCmd(line2, client);
+        if(c2 == null) {
+            client.send("Не удалось распознать " + line2 + " как команду");
+            if(op.equals("&&")) {
+                return c1;
+            }
+        }
+        if(op.equals("&&")) {
+            c1.and(client,c2);
+            return c1;
+        } else {
+            c1.or(client, c2);
+            return c2;
+        }
 
+    }
 
 
 }
