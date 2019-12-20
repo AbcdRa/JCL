@@ -17,9 +17,11 @@ public class StaticFunc {
                 int currInt = in.read();
                 if (currInt == -1) break;
                 result += (char) currInt;
+                //System.out.println((char)currInt + "  " + currInt);
                 for (int i = 0; currInt == stopBytes[i]; i++) {
                     currInt = in.read();
                     result += (char) currInt;
+
                     if (i == stopBytes.length - 1) return result;
                 }
             }

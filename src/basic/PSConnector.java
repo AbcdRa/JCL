@@ -10,6 +10,11 @@ public class PSConnector {
 
     private InputStream in = null;
     private OutputStream out = null;
+
+    public Process getCmdProcess() {
+        return cmdProcess;
+    }
+
     private Process cmdProcess = null;
 
     /**Создаем экземпляр PS**/

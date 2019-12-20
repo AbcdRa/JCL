@@ -4,7 +4,11 @@
         <Command string = "dir" class = "Dir"/>
         <Command string = "cd" class = "Cd"/>
         <Command string = "pwd" class = "Pwd"/>
-        <Command string = "!" class="start"/>
+        <Command string = "!" class="Start"/>
         <Command string = "job" class="Job"/>
+        <Command string = "!!!!" class="ExtStart"/>
+        <Command string = "!!" class="ScrStart"/>
+        <Command string = "!!!" class="RdrStart"/>
+        <Command string = "who" class="Who"/>
     </Commands>
 </root>

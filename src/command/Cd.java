@@ -21,7 +21,7 @@ public class Cd implements Command {
 
     @Override
     public void exec(PSConnector console, ClientThread client) {
-        rawCmd = "try { " + baseCmd + " " + arg + " -ErrorAction stop } catch {$error[0]}";
+        rawCmd = "try { " + baseCmd + " " + arg + " -ErrorAction stop } catch {echo $error[0]}";
         if(backMode) {
             rawCmd = "Start-Job -ScriptBlock {" + rawCmd + "} ";
         }
