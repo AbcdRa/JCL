@@ -1,0 +1,10 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<root>
+    <Commands>
+        <Command string = "dir" class = "Dir"/>
+        <Command string = "cd" class = "Cd"/>
+        <Command string = "pwd" class = "Pwd"/>
+        <Command string = "!" class="start"/>
+        <Command string = "job" class="Job"/>
+    </Commands>
+</root>

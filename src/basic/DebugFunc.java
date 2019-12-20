@@ -1,7 +1,11 @@
 package basic;
 
+import command.Command;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public class DebugFunc {
     public static void displayByteOut(InputStream in) {

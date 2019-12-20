@@ -13,14 +13,14 @@ public class PSConnector {
     private Process cmdProcess = null;
 
     /**Создаем экземпляр PS**/
-    public PSConnector() throws Exception{
+    public PSConnector() {
         try {
             cmdProcess = (new ProcessBuilder("powershell")).start();
             in = cmdProcess.getInputStream();
             out = cmdProcess.getOutputStream();
+            getOut(">");
             send("chcp 65001");
-            Thread.sleep(1000);
-            System.out.println(getOut("https"));
+            System.out.println(getOut(">"));
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("ERR PSConnector_init Не удалось создать процесс для консоли");
@@ -53,12 +53,7 @@ public class PSConnector {
 
     /**Буфферизировать и ждать вывод до стоп строки**/
     public String getOut(String stopStr) {
-        try {
-            return StaticFunc.cutStringTo(in, stopStr);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return StaticFunc.cutStringTo(in, stopStr);
     }
 
 }
